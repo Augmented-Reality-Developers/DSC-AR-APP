@@ -19,4 +19,9 @@ public class Main_menu : MonoBehaviour
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
     }
+
+    public void WebView()
+    {
+        SceneManager.LoadScene(2);
+    }
 }
