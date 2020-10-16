@@ -1,31 +1,11 @@
-/*
- * Copyright (C) 2012 GREE, Inc.
- * 
- * This software is provided 'as-is', without any express or implied
- * warranty.  In no event will the authors be held liable for any damages
- * arising from the use of this software.
- * 
- * Permission is granted to anyone to use this software for any purpose,
- * including commercial applications, and to alter it and redistribute it
- * freely, subject to the following restrictions:
- * 
- * 1. The origin of this software must not be misrepresented; you must not
- *    claim that you wrote the original software. If you use this software
- *    in a product, an acknowledgment in the product documentation would be
- *    appreciated but is not required.
- * 2. Altered source versions must be plainly marked as such, and must not be
- *    misrepresented as being the original software.
- * 3. This notice may not be removed or altered from any source distribution.
- */
-
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 #if UNITY_2018_4_OR_NEWER
 using UnityEngine.Networking;
 #endif
 using UnityEngine.UI;
 
-public class SampleWebView : MonoBehaviour
+public class WebViewScript : MonoBehaviour
 {
     public string Url;
     public Text status;
@@ -111,7 +91,7 @@ public class SampleWebView : MonoBehaviour
             },
             //ua: "custom user agent string",
 #if UNITY_EDITOR
-            separated: false,
+            //separated: false,
 #endif
             enableWKWebView: true);
 #if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
@@ -133,20 +113,25 @@ public class SampleWebView : MonoBehaviour
         webViewObject.SetVisibility(true);
 
 #if !UNITY_WEBPLAYER && !UNITY_WEBGL
-        if (Url.StartsWith("http")) {
+        if (Url.StartsWith("http"))
+        {
             webViewObject.LoadURL(Url.Replace(" ", "%20"));
-        } else {
+        }
+        else
+        {
             var exts = new string[]{
                 ".jpg",
                 ".js",
                 ".html"  // should be last
             };
-            foreach (var ext in exts) {
+            foreach (var ext in exts)
+            {
                 var url = Url.Replace(".html", ext);
                 var src = System.IO.Path.Combine(Application.streamingAssetsPath, url);
                 var dst = System.IO.Path.Combine(Application.persistentDataPath, url);
                 byte[] result = null;
-                if (src.Contains("://")) {  // for Android
+                if (src.Contains("://"))
+                {  // for Android
 #if UNITY_2018_4_OR_NEWER
                     // NOTE: a more complete code that utilizes UnityWebRequest can be found in https://github.com/gree/unity-webview/commit/2a07e82f760a8495aa3a77a23453f384869caba7#diff-4379160fa4c2a287f414c07eb10ee36d
                     var unityWebRequest = UnityWebRequest.Get(src);
@@ -157,11 +142,14 @@ public class SampleWebView : MonoBehaviour
                     yield return www;
                     result = www.bytes;
 #endif
-                } else {
+                }
+                else
+                {
                     result = System.IO.File.ReadAllBytes(src);
                 }
                 System.IO.File.WriteAllBytes(dst, result);
-                if (ext == ".html") {
+                if (ext == ".html")
+                {
                     webViewObject.LoadURL("file://" + dst.Replace(" ", "%20"));
                     break;
                 }
@@ -180,34 +168,42 @@ public class SampleWebView : MonoBehaviour
     void OnGUI()
     {
         GUI.enabled = webViewObject.CanGoBack();
-        if (GUI.Button(new Rect(10, 10, 80, 80), "<")) {
+        if (GUI.Button(new Rect(10, 10, 80, 80), "<"))
+        {
             webViewObject.GoBack();
         }
         GUI.enabled = true;
 
         GUI.enabled = webViewObject.CanGoForward();
-        if (GUI.Button(new Rect(100, 10, 80, 80), ">")) {
+        if (GUI.Button(new Rect(100, 10, 80, 80), ">"))
+        {
             webViewObject.GoForward();
         }
         GUI.enabled = true;
 
-        if (GUI.Button(new Rect(200, 10, 80, 80), "r")) {
+        if (GUI.Button(new Rect(200, 10, 80, 80), "r"))
+        {
             webViewObject.Reload();
         }
 
         GUI.TextField(new Rect(300, 10, 200, 80), "" + webViewObject.Progress());
 
-        if (GUI.Button(new Rect(600, 10, 80, 80), "*")) {
+        if (GUI.Button(new Rect(600, 10, 80, 80), "*"))
+        {
             var g = GameObject.Find("WebViewObject");
-            if (g != null) {
+            if (g != null)
+            {
                 Destroy(g);
-            } else {
+            }
+            else
+            {
                 StartCoroutine(Start());
             }
         }
         GUI.enabled = true;
 
-        if (GUI.Button(new Rect(700, 10, 80, 80), "c")) {
+        if (GUI.Button(new Rect(700, 10, 80, 80), "c"))
+        {
             Debug.Log(webViewObject.GetCookies(Url));
         }
         GUI.enabled = true;
